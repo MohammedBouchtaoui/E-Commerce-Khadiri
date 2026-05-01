@@ -32,11 +32,20 @@ class AppFixtures extends Fixture
         // Création des produits
         $products = [
             ['Wireless Headphones', 'wireless-headphones', 'Premium sound quality with noise cancellation', 79.99, 50, 'item.png', 'Electronics'],
+            ['Wireless Headphones', 'wireless-headphones', 'Premium sound quality with noise cancellation', 79.99, 50, 'item.png', 'Electronics'],
+
+            ['Wireless Headphones', 'wireless-headphones', 'Premium sound quality with noise cancellation', 79.99, 50, 'item.png', 'Electronics'],
             ['Bluetooth Speaker', 'bluetooth-speaker', 'Portable wireless speaker', 59.99, 30, 'item.png', 'Electronics'],
             ['Smartphone Stand', 'smartphone-stand', 'Adjustable phone stand', 19.99, 100, 'item.png', 'Electronics'],
             ['Mechanical Keyboard', 'mechanical-keyboard', 'RGB mechanical gaming keyboard', 89.99, 25, 'item.png', 'Electronics'],
             ['Classic Leather Jacket', 'classic-leather-jacket', 'Genuine leather jacket', 149.99, 20, 'item.png', 'Fashion'],
             ['Wireless Mouse', 'wireless-mouse', 'Ergonomic wireless mouse', 29.99, 45, 'mouse.png', 'Electronics'],
+            ['Mechanical Keyboard', 'mechanical-keyboard', 'RGB mechanical gaming keyboard', 89.99, 25, 'item.png', 'Electronics'],
+            ['Mechanical Keyboard', 'mechanical-keyboard', 'RGB mechanical gaming keyboard', 89.99, 25, 'item.png', 'Electronics'],
+            ['Mechanical Keyboard', 'mechanical-keyboard', 'RGB mechanical gaming keyboard', 89.99, 25, 'item.png', 'Electronics'],
+            ['Mechanical Keyboard', 'mechanical-keyboard', 'RGB mechanical gaming keyboard', 89.99, 25, 'item.png', 'Electronics'],
+            ['Mechanical Keyboard', 'mechanical-keyboard', 'RGB mechanical gaming keyboard', 89.99, 25, 'item.png', 'Electronics'],
+
             ['Yoga Mat', 'yoga-mat', 'Non-slip exercise mat', 29.99, 60, 'item.png', 'Sports'],
         ];
 

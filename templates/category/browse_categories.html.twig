@@ -3,37 +3,9 @@
 {% block title %}Categories - Our Store{% endblock %}
 
 {% block content %}
-    {% for category in categories %}
-        <div class="col">
-            <div class="card h-100 shadow-sm">
-                <div class="card-body text-center">
-                    <h4 class="card-title">{{ category.nom }}</h4>
-                    <p class="card-text text-muted">{{ category.description }}</p>
-                    <a href="{{ path('app_products_by_category', {slug: category.slug}) }}" class="btn btn-outline-primary">
-                        Browse {{ category.nom }}
-                    </a>
-                </div>
-            </div>
-        </div>
-    {% endfor %}
-    <div class="bg-primary bg-gradient text-white py-5">
-        <div class="container">
-            <div class="row align-items-center">
-                <div class="col-lg-6">
-                    <h1 class="display-3 fw-bold mb-4">Welcome to Our Store</h1>
-                    <p class="lead mb-4">Discover amazing products across all categories.</p>
-                    <a href="{{ path('app_products') }}" class="btn btn-light btn-lg me-2">Shop Now</a>
-                </div>
-                <div class="col-lg-6 text-center">
-                    <img src="https://via.placeholder.com/500x400" class="img-fluid rounded" alt="Shopping">
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <div class="container my-5" id="categories">
+    <div class="container my-5">
         <div class="text-center mb-5">
-            <h2 class="display-5 fw-bold">Shop by Category</h2>
+            <h1 class="display-5 fw-bold">Shop by Category</h1>
             <p class="text-muted">Explore our wide range of products organized by category</p>
         </div>
 
@@ -44,13 +16,15 @@
                         <div class="card-body text-center">
                             <h4 class="card-title">{{ category.nom }}</h4>
                             <p class="card-text text-muted">{{ category.description }}</p>
-                            <a href="{{ path('app_products_by_category', {slug: category.slug}) }}" class="btn btn-outline-primary">Browse {{ category.nom }}</a>
+                            <a href="{{ path('app_products_by_category', {slug: category.slug}) }}" class="btn btn-outline-primary">
+                                Browse {{ category.nom }}
+                            </a>
                         </div>
                     </div>
                 </div>
             {% else %}
                 <div class="col-12">
-                    <p class="text-center">Aucune catégorie disponible.</p>
+                    <p class="text-center text-muted">No categories found.</p>
                 </div>
             {% endfor %}
         </div>
