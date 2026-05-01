@@ -1,0 +1,1795 @@
+﻿
+
+===== FICHIER: C:\Users\dell\Desktop\4GI-EHEI\SYMFONY\ecommerce\assets\controllers\hello_controller.js =====
+import { Controller } from '@hotwired/stimulus';
+
+/*
+ * This is an example Stimulus controller!
+ *
+ * Any element with a data-controller="hello" attribute will cause
+ * this controller to be executed. The name "hello" comes from the filename:
+ * hello_controller.js -> "hello"
+ *
+ * Delete this file or adapt it for your use!
+ */
+export default class extends Controller {
+    connect() {
+        this.element.textContent = 'Hello Stimulus! Edit me in assets/controllers/hello_controller.js';
+    }
+}
+
+
+
+===== FICHIER: C:\Users\dell\Desktop\4GI-EHEI\SYMFONY\ecommerce\assets\styles\app.css =====
+body {
+    background-color: skyblue;
+}
+
+
+
+===== FICHIER: C:\Users\dell\Desktop\4GI-EHEI\SYMFONY\ecommerce\assets\app.js =====
+import './bootstrap.js';
+/*
+ * Welcome to your app's main JavaScript file!
+ *
+ * This file will be included onto the page via the importmap() Twig function,
+ * which should already be in your base.html.twig.
+ */
+import './styles/app.css';
+
+console.log('This log comes from assets/app.js - welcome to AssetMapper! ðŸŽ‰');
+
+
+
+===== FICHIER: C:\Users\dell\Desktop\4GI-EHEI\SYMFONY\ecommerce\assets\bootstrap.js =====
+import { startStimulusApp } from '@symfony/stimulus-bundle';
+
+const app = startStimulusApp();
+// register any custom, 3rd party controllers here
+// app.register('some_controller_name', SomeImportedController);
+
+
+
+===== FICHIER: C:\Users\dell\Desktop\4GI-EHEI\SYMFONY\ecommerce\assets\controllers.json =====
+{
+    "controllers": {
+        "@symfony/ux-turbo": {
+            "turbo-core": {
+                "enabled": true,
+                "fetch": "eager"
+            },
+            "mercure-turbo-stream": {
+                "enabled": false,
+                "fetch": "eager"
+            }
+        }
+    },
+    "entrypoints": []
+}
+
+
+
+===== FICHIER: C:\Users\dell\Desktop\4GI-EHEI\SYMFONY\ecommerce\config\packages\asset_mapper.yaml =====
+framework:
+    asset_mapper:
+        # The paths to make available to the asset mapper.
+        paths:
+            - assets/
+        missing_import_mode: strict
+
+when@prod:
+    framework:
+        asset_mapper:
+            missing_import_mode: warn
+
+
+
+===== FICHIER: C:\Users\dell\Desktop\4GI-EHEI\SYMFONY\ecommerce\config\packages\cache.yaml =====
+framework:
+    cache:
+        # Unique name of your app: used to compute stable namespaces for cache keys.
+        #prefix_seed: your_vendor_name/app_name
+
+        # The "app" cache stores to the filesystem by default.
+        # The data in this cache should persist between deploys.
+        # Other options include:
+
+        # Redis
+        #app: cache.adapter.redis
+        #default_redis_provider: redis://localhost
+
+        # APCu (not recommended with heavy random-write workloads as memory fragmentation can cause perf issues)
+        #app: cache.adapter.apcu
+
+        # Namespaced pools use the above "app" backend by default
+        #pools:
+            #my.dedicated.cache: null
+
+
+
+===== FICHIER: C:\Users\dell\Desktop\4GI-EHEI\SYMFONY\ecommerce\config\packages\debug.yaml =====
+when@dev:
+    debug:
+        # Forwards VarDumper Data clones to a centralized server allowing to inspect dumps on CLI or in your browser.
+        # See the "server:dump" command to start a new server.
+        dump_destination: "tcp://%env(VAR_DUMPER_SERVER)%"
+
+
+
+===== FICHIER: C:\Users\dell\Desktop\4GI-EHEI\SYMFONY\ecommerce\config\packages\doctrine.yaml =====
+doctrine:
+    dbal:
+        url: '%env(resolve:DATABASE_URL)%'
+
+        # IMPORTANT: You MUST configure your server version,
+        # either here or in the DATABASE_URL env var (see .env file)
+        #server_version: '16'
+
+        profiling_collect_backtrace: '%kernel.debug%'
+        use_savepoints: true
+    orm:
+        auto_generate_proxy_classes: true
+        enable_lazy_ghost_objects: true
+        report_fields_where_declared: true
+        validate_xml_mapping: true
+        naming_strategy: doctrine.orm.naming_strategy.underscore_number_aware
+        identity_generation_preferences:
+            Doctrine\DBAL\Platforms\PostgreSQLPlatform: identity
+        auto_mapping: true
+        mappings:
+            App:
+                type: attribute
+                is_bundle: false
+                dir: '%kernel.project_dir%/src/Entity'
+                prefix: 'App\Entity'
+                alias: App
+        controller_resolver:
+            auto_mapping: false
+
+when@test:
+    doctrine:
+        dbal:
+            # "TEST_TOKEN" is typically set by ParaTest
+            dbname_suffix: '_test%env(default::TEST_TOKEN)%'
+
+when@prod:
+    doctrine:
+        orm:
+            auto_generate_proxy_classes: false
+            proxy_dir: '%kernel.build_dir%/doctrine/orm/Proxies'
+            query_cache_driver:
+                type: pool
+                pool: doctrine.system_cache_pool
+            result_cache_driver:
+                type: pool
+                pool: doctrine.result_cache_pool
+
+    framework:
+        cache:
+            pools:
+                doctrine.result_cache_pool:
+                    adapter: cache.app
+                doctrine.system_cache_pool:
+                    adapter: cache.system
+
+
+
+===== FICHIER: C:\Users\dell\Desktop\4GI-EHEI\SYMFONY\ecommerce\config\packages\doctrine_migrations.yaml =====
+doctrine_migrations:
+    migrations_paths:
+        # namespace is arbitrary but should be different from App\Migrations
+        # as migrations classes should NOT be autoloaded
+        'DoctrineMigrations': '%kernel.project_dir%/migrations'
+    enable_profiler: false
+
+
+
+===== FICHIER: C:\Users\dell\Desktop\4GI-EHEI\SYMFONY\ecommerce\config\packages\framework.yaml =====
+# see https://symfony.com/doc/current/reference/configuration/framework.html
+framework:
+    secret: '%env(APP_SECRET)%'
+    #csrf_protection: true
+
+    # Note that the session will be started ONLY if you read or write from it.
+    session: true
+
+    #esi: true
+    #fragments: true
+
+when@test:
+    framework:
+        test: true
+        session:
+            storage_factory_id: session.storage.factory.mock_file
+
+
+
+===== FICHIER: C:\Users\dell\Desktop\4GI-EHEI\SYMFONY\ecommerce\config\packages\mailer.yaml =====
+framework:
+    mailer:
+        dsn: '%env(MAILER_DSN)%'
+
+
+
+===== FICHIER: C:\Users\dell\Desktop\4GI-EHEI\SYMFONY\ecommerce\config\packages\messenger.yaml =====
+framework:
+    messenger:
+        failure_transport: failed
+
+        transports:
+            # https://symfony.com/doc/current/messenger.html#transport-configuration
+            async:
+                dsn: '%env(MESSENGER_TRANSPORT_DSN)%'
+                retry_strategy:
+                    max_retries: 3
+                    multiplier: 2
+            failed: 'doctrine://default?queue_name=failed'
+            # sync: 'sync://'
+
+        default_bus: messenger.bus.default
+
+        buses:
+            messenger.bus.default: []
+
+        routing:
+            Symfony\Component\Mailer\Messenger\SendEmailMessage: async
+            Symfony\Component\Notifier\Message\ChatMessage: async
+            Symfony\Component\Notifier\Message\SmsMessage: async
+
+            # Route your messages to the transports
+            # 'App\Message\YourMessage': async
+
+
+
+===== FICHIER: C:\Users\dell\Desktop\4GI-EHEI\SYMFONY\ecommerce\config\packages\monolog.yaml =====
+monolog:
+    channels:
+        - deprecation # Deprecations are logged in the dedicated "deprecation" channel when it exists
+
+when@dev:
+    monolog:
+        handlers:
+            main:
+                type: stream
+                path: "%kernel.logs_dir%/%kernel.environment%.log"
+                level: debug
+                channels: ["!event"]
+            console:
+                type: console
+                process_psr_3_messages: false
+                channels: ["!event", "!doctrine", "!console"]
+
+when@test:
+    monolog:
+        handlers:
+            main:
+                type: fingers_crossed
+                action_level: error
+                handler: nested
+                excluded_http_codes: [404, 405]
+                channels: ["!event"]
+            nested:
+                type: stream
+                path: "%kernel.logs_dir%/%kernel.environment%.log"
+                level: debug
+
+when@prod:
+    monolog:
+        handlers:
+            main:
+                type: fingers_crossed
+                action_level: error
+                handler: nested
+                excluded_http_codes: [404, 405]
+                channels: ["!deprecation"]
+                buffer_size: 50 # How many messages should be saved? Prevent memory leaks
+            nested:
+                type: stream
+                path: php://stderr
+                level: debug
+                formatter: monolog.formatter.json
+            console:
+                type: console
+                process_psr_3_messages: false
+                channels: ["!event", "!doctrine"]
+            deprecation:
+                type: stream
+                channels: [deprecation]
+                path: php://stderr
+                formatter: monolog.formatter.json
+
+
+
+===== FICHIER: C:\Users\dell\Desktop\4GI-EHEI\SYMFONY\ecommerce\config\packages\notifier.yaml =====
+framework:
+    notifier:
+        chatter_transports:
+        texter_transports:
+        channel_policy:
+            # use chat/slack, chat/telegram, sms/twilio or sms/nexmo
+            urgent: ['email']
+            high: ['email']
+            medium: ['email']
+            low: ['email']
+        admin_recipients:
+            - { email: admin@example.com }
+
+
+
+===== FICHIER: C:\Users\dell\Desktop\4GI-EHEI\SYMFONY\ecommerce\config\packages\routing.yaml =====
+framework:
+    router:
+        # Configure how to generate URLs in non-HTTP contexts, such as CLI commands.
+        # See https://symfony.com/doc/current/routing.html#generating-urls-in-commands
+        default_uri: '%env(DEFAULT_URI)%'
+
+when@prod:
+    framework:
+        router:
+            strict_requirements: null
+
+
+
+===== FICHIER: C:\Users\dell\Desktop\4GI-EHEI\SYMFONY\ecommerce\config\packages\security.yaml =====
+security:
+    # https://symfony.com/doc/current/security.html#registering-the-user-hashing-passwords
+    password_hashers:
+        Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface: 'auto'
+    # https://symfony.com/doc/current/security.html#loading-the-user-the-user-provider
+    providers:
+        users_in_memory: { memory: null }
+    firewalls:
+        dev:
+            pattern: ^/(_(profiler|wdt)|css|images|js)/
+            security: false
+        main:
+            lazy: true
+            provider: users_in_memory
+
+            # activate different ways to authenticate
+            # https://symfony.com/doc/current/security.html#the-firewall
+
+            # https://symfony.com/doc/current/security/impersonating_user.html
+            # switch_user: true
+
+    # Easy way to control access for large sections of your site
+    # Note: Only the *first* access control that matches will be used
+    access_control:
+        # - { path: ^/admin, roles: ROLE_ADMIN }
+        # - { path: ^/profile, roles: ROLE_USER }
+
+when@test:
+    security:
+        password_hashers:
+            # By default, password hashers are resource intensive and take time. This is
+            # important to generate secure password hashes. In tests however, secure hashes
+            # are not important, waste resources and increase test times. The following
+            # reduces the work factor to the lowest possible values.
+            Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface:
+                algorithm: auto
+                cost: 4 # Lowest possible value for bcrypt
+                time_cost: 3 # Lowest possible value for argon
+                memory_cost: 10 # Lowest possible value for argon
+
+
+
+===== FICHIER: C:\Users\dell\Desktop\4GI-EHEI\SYMFONY\ecommerce\config\packages\translation.yaml =====
+framework:
+    default_locale: en
+    translator:
+        default_path: '%kernel.project_dir%/translations'
+        providers:
+
+
+
+===== FICHIER: C:\Users\dell\Desktop\4GI-EHEI\SYMFONY\ecommerce\config\packages\twig.yaml =====
+twig:
+    file_name_pattern: '*.twig'
+
+when@test:
+    twig:
+        strict_variables: true
+
+
+
+===== FICHIER: C:\Users\dell\Desktop\4GI-EHEI\SYMFONY\ecommerce\config\packages\validator.yaml =====
+framework:
+    validation:
+        # Enables validator auto-mapping support.
+        # For instance, basic validation constraints will be inferred from Doctrine's metadata.
+        #auto_mapping:
+        #    App\Entity\: []
+
+when@test:
+    framework:
+        validation:
+            not_compromised_password: false
+
+
+
+===== FICHIER: C:\Users\dell\Desktop\4GI-EHEI\SYMFONY\ecommerce\config\packages\web_profiler.yaml =====
+when@dev:
+    web_profiler:
+        toolbar: true
+
+    framework:
+        profiler:
+            collect_serializer_data: true
+
+when@test:
+    framework:
+        profiler: { collect: false }
+
+
+
+===== FICHIER: C:\Users\dell\Desktop\4GI-EHEI\SYMFONY\ecommerce\config\routes\framework.yaml =====
+when@dev:
+    _errors:
+        resource: '@FrameworkBundle/Resources/config/routing/errors.xml'
+        prefix: /_error
+
+
+
+===== FICHIER: C:\Users\dell\Desktop\4GI-EHEI\SYMFONY\ecommerce\config\routes\security.yaml =====
+_security_logout:
+    resource: security.route_loader.logout
+    type: service
+
+
+
+===== FICHIER: C:\Users\dell\Desktop\4GI-EHEI\SYMFONY\ecommerce\config\routes\web_profiler.yaml =====
+when@dev:
+    web_profiler_wdt:
+        resource: '@WebProfilerBundle/Resources/config/routing/wdt.xml'
+        prefix: /_wdt
+
+    web_profiler_profiler:
+        resource: '@WebProfilerBundle/Resources/config/routing/profiler.xml'
+        prefix: /_profiler
+
+
+
+===== FICHIER: C:\Users\dell\Desktop\4GI-EHEI\SYMFONY\ecommerce\config\bundles.php =====
+<?php
+
+return [
+    Symfony\Bundle\FrameworkBundle\FrameworkBundle::class => ['all' => true],
+    Doctrine\Bundle\DoctrineBundle\DoctrineBundle::class => ['all' => true],
+    Doctrine\Bundle\MigrationsBundle\DoctrineMigrationsBundle::class => ['all' => true],
+    Symfony\Bundle\DebugBundle\DebugBundle::class => ['dev' => true],
+    Symfony\Bundle\TwigBundle\TwigBundle::class => ['all' => true],
+    Symfony\Bundle\WebProfilerBundle\WebProfilerBundle::class => ['dev' => true, 'test' => true],
+    Symfony\UX\StimulusBundle\StimulusBundle::class => ['all' => true],
+    Symfony\UX\Turbo\TurboBundle::class => ['all' => true],
+    Twig\Extra\TwigExtraBundle\TwigExtraBundle::class => ['all' => true],
+    Symfony\Bundle\SecurityBundle\SecurityBundle::class => ['all' => true],
+    Symfony\Bundle\MonologBundle\MonologBundle::class => ['all' => true],
+    Symfony\Bundle\MakerBundle\MakerBundle::class => ['dev' => true],
+];
+
+
+
+===== FICHIER: C:\Users\dell\Desktop\4GI-EHEI\SYMFONY\ecommerce\config\preload.php =====
+<?php
+
+if (file_exists(dirname(__DIR__).'/var/cache/prod/App_KernelProdContainer.preload.php')) {
+    require dirname(__DIR__).'/var/cache/prod/App_KernelProdContainer.preload.php';
+}
+
+
+
+===== FICHIER: C:\Users\dell\Desktop\4GI-EHEI\SYMFONY\ecommerce\config\routes.yaml =====
+controllers:
+    resource:
+        path: ../src/Controller/
+        namespace: App\Controller
+    type: attribute
+
+
+
+===== FICHIER: C:\Users\dell\Desktop\4GI-EHEI\SYMFONY\ecommerce\config\services.yaml =====
+# This file is the entry point to configure your own services.
+# Files in the packages/ subdirectory configure your dependencies.
+
+# Put parameters here that don't need to change on each machine where the app is deployed
+# https://symfony.com/doc/current/best_practices.html#use-parameters-for-application-configuration
+parameters:
+
+services:
+    # default configuration for services in *this* file
+    _defaults:
+        autowire: true      # Automatically injects dependencies in your services.
+        autoconfigure: true # Automatically registers your services as commands, event subscribers, etc.
+
+    # makes classes in src/ available to be used as services
+    # this creates a service per class whose id is the fully-qualified class name
+    App\:
+        resource: '../src/'
+        exclude:
+            - '../src/DependencyInjection/'
+            - '../src/Entity/'
+            - '../src/Kernel.php'
+
+    # add more service definitions when explicit configuration is needed
+    # please note that last definitions always *replace* previous ones
+
+
+
+===== FICHIER: C:\Users\dell\Desktop\4GI-EHEI\SYMFONY\ecommerce\public\index.php =====
+<?php
+
+use App\Kernel;
+
+require_once dirname(__DIR__).'/vendor/autoload_runtime.php';
+
+return static function (array $context) {
+    return new Kernel($context['APP_ENV'], (bool) $context['APP_DEBUG']);
+};
+
+
+
+===== FICHIER: C:\Users\dell\Desktop\4GI-EHEI\SYMFONY\ecommerce\src\Controller\MainController.php =====
+<?php
+
+namespace App\Controller;
+
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Routing\Attribute\Route;
+
+final class HomeController extends AbstractController
+{
+    #[Route('/home', name: 'app_home')]
+    public function index(): Response
+    {
+        return $this->render('category/browse_categories.html.twig', [
+            'controller_name' => 'HomeController',
+        ]);
+    }
+
+    #[Route('/electronics', name: 'app_products_by_category')]
+    public function productsByCategory(): Response
+    {
+        return $this->render('product/products_by_category.html.twig', [
+            'controller_name' => 'HomeController',
+        ]);
+    }
+
+    #[Route('/product', name: 'app_product_details')]
+    public function product(): Response
+    {
+        return $this->render('product/product_details.html.twig', [
+            'controller_name' => 'HomeController',
+        ]);
+    }
+
+    #[Route('/login', name: 'app_login')]
+    public function login(): Response
+    {
+        return $this->render('secutity/login.html.twig', [
+            'controller_name' => 'HomeController',
+        ]);
+    }
+
+    #[Route('/products', name: 'app_products')]
+    public function products(): Response
+    {
+        return $this->render('product/index.html.twig', [
+            'controller_name' => 'HomeController',
+        ]);
+    }
+
+    #[Route('/profile', name: 'app_profile')]
+    public function profile(): Response
+    {
+        return $this->render('profile/index.html.twig', [
+            'controller_name' => 'HomeController',
+        ]);
+    }
+
+    #[Route('/cart', name: 'app_cart')]
+    public function cart(): Response
+    {
+        return $this->render('cart/index.html.twig', [
+            'controller_name' => 'HomeController',
+        ]);
+    }
+
+
+}
+
+
+===== FICHIER: C:\Users\dell\Desktop\4GI-EHEI\SYMFONY\ecommerce\src\Kernel.php =====
+<?php
+
+namespace App;
+
+use Symfony\Bundle\FrameworkBundle\Kernel\MicroKernelTrait;
+use Symfony\Component\HttpKernel\Kernel as BaseKernel;
+
+class Kernel extends BaseKernel
+{
+    use MicroKernelTrait;
+}
+
+
+
+===== FICHIER: C:\Users\dell\Desktop\4GI-EHEI\SYMFONY\ecommerce\templates\cart\cart.html.twig =====
+{% extends 'layout.html.twig' %}
+{% block title %} Shopping Cart - Our Store {% endblock title %}
+{% block content %}
+
+    <!-- Shopping Cart Section -->
+    <div class="container my-5">
+        <h1 class="mb-4">Shopping Cart</h1>
+
+        <div class="row">
+            <div class="col-lg-8">
+                <!-- Cart Items -->
+                <div class="card mb-3">
+                    <div class="card-body">
+                        <div class="table-responsive">
+                            <table class="table align-middle">
+                                <thead>
+                                <tr>
+                                    <th scope="col">Product</th>
+                                    <th scope="col">Price</th>
+                                    <th scope="col">Quantity</th>
+                                    <th scope="col">Total</th>
+                                    <th scope="col"></th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                <!-- Cart Item 1 -->
+                                <tr>
+                                    <td>
+                                        <div class="d-flex align-items-center">
+                                            <img src="thumbnail.png" class="img-thumbnail me-3" alt="Product" style="width: 80px; height: 80px; object-fit: cover;">
+                                            <div>
+                                                <h6 class="mb-0">Wireless Headphones</h6>
+                                                <small class="text-muted">Color: Black</small>
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td>$79.99</td>
+                                    <td>2</td>
+                                    <td class="fw-bold">$159.98</td>
+                                    <td>
+                                        <button class="btn btn-sm btn-outline-danger">Remove</button>
+                                    </td>
+                                </tr>
+
+                                <!-- Cart Item 2 -->
+                                <tr>
+                                    <td>
+                                        <div class="d-flex align-items-center">
+                                            <img src="thumbnail.png" class="img-thumbnail me-3" alt="Product" style="width: 80px; height: 80px; object-fit: cover;">
+                                            <div>
+                                                <h6 class="mb-0">Classic Leather Jacket</h6>
+                                                <small class="text-muted">Size: M</small>
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td>$149.99</td>
+                                    <td>1</td>
+                                    <td class="fw-bold">$149.99</td>
+                                    <td>
+                                        <button class="btn btn-sm btn-outline-danger">Remove</button>
+                                    </td>
+                                </tr>
+
+                                <!-- Cart Item 3 -->
+                                <tr>
+                                    <td>
+                                        <div class="d-flex align-items-center">
+                                            <img src="thumbnail.png" class="img-thumbnail me-3" alt="Product" style="width: 80px; height: 80px; object-fit: cover;">
+                                            <div>
+                                                <h6 class="mb-0">Bluetooth Speaker</h6>
+                                                <small class="text-muted">Color: Blue</small>
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td>$59.99</td>
+                                    <td>1</td>
+                                    <td class="fw-bold">$59.99</td>
+                                    <td>
+                                        <button class="btn btn-sm btn-outline-danger">Remove</button>
+                                    </td>
+                                </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+                <a href="index.html" class="btn btn-outline-primary">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-arrow-left" viewBox="0 0 16 16">
+                        <path fill-rule="evenodd" d="M15 8a.5.5 0 0 0-.5-.5H2.707l3.147-3.146a.5.5 0 1 0-.708-.708l-4 4a.5.5 0 0 0 0 .708l4 4a.5.5 0 0 0 .708-.708L2.707 8.5H14.5A.5.5 0 0 0 15 8z"/>
+                    </svg>
+                    Continue Shopping
+                </a>
+            </div>
+
+            <!-- Order Summary -->
+            <div class="col-lg-4">
+                <div class="card">
+                    <div class="card-header bg-primary text-white">
+                        <h5 class="mb-0">Order Summary</h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="d-flex justify-content-between mb-2">
+                            <span>Subtotal:</span>
+                            <span>$369.96</span>
+                        </div>
+                        <div class="d-flex justify-content-between mb-2">
+                            <span>Shipping:</span>
+                            <span>$10.00</span>
+                        </div>
+                        <div class="d-flex justify-content-between mb-2">
+                            <span>Tax:</span>
+                            <span>$30.40</span>
+                        </div>
+                        <hr>
+                        <div class="d-flex justify-content-between mb-3">
+                            <strong>Total:</strong>
+                            <strong class="text-success">$410.36</strong>
+                        </div>
+                        <div class="d-grid">
+                            <button class="btn btn-success btn-lg">Proceed to Checkout</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Promo Code -->
+                <div class="card mt-3">
+                    <div class="card-body">
+                        <h6 class="card-title">Have a promo code?</h6>
+                        <form>
+                            <div class="input-group">
+                                <input type="text" class="form-control" placeholder="Enter code">
+                                <button class="btn btn-outline-secondary" type="submit">Apply</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+{% endblock content %}
+
+
+===== FICHIER: C:\Users\dell\Desktop\4GI-EHEI\SYMFONY\ecommerce\templates\category\browse_categories.html.twig =====
+<div class="bg-primary bg-gradient text-white py-5">
+    <div class="container">
+        <div class="row align-items-center">
+            <div class="col-lg-6">
+                <h1 class="display-3 fw-bold mb-4">Welcome to Our Store</h1>
+                <p class="lead mb-4">Discover amazing products across all categories. Quality items at unbeatable prices.</p>
+                <a href="index.html" class="btn btn-light btn-lg me-2">Shop Now</a>
+                <a href="#categories" class="btn btn-outline-light btn-lg">Browse Categories</a>
+            </div>
+            <div class="col-lg-6 text-center">
+                <img src="https://via.placeholder.com/500x400" class="img-fluid rounded" alt="Shopping">
+            </div>
+        </div>
+    </div>
+</div>
+
+
+===== FICHIER: C:\Users\dell\Desktop\4GI-EHEI\SYMFONY\ecommerce\templates\partials\features-section.html.twig =====
+<div class="bg-light py-5 mt-5">
+    <div class="container">
+        <div class="row text-center">
+            <div class="col-md-4 mb-4">
+                <div class="card border-0 bg-transparent">
+                    <div class="card-body">
+                        <div class="mb-3">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" fill="currentColor" class="bi bi-truck text-primary" viewBox="0 0 16 16">
+                                <path d="M0 3.5A1.5 1.5 0 0 1 1.5 2h9A1.5 1.5 0 0 1 12 3.5V5h1.02a1.5 1.5 0 0 1 1.17.563l1.481 1.85a1.5 1.5 0 0 1 .329.938V10.5a1.5 1.5 0 0 1-1.5 1.5H14a2 2 0 1 1-4 0H5a2 2 0 1 1-3.998-.085A1.5 1.5 0 0 1 0 10.5zm1.294 7.456A2 2 0 0 1 4.732 11h5.536a2 2 0 0 1 .732-.732V3.5a.5.5 0 0 0-.5-.5h-9a.5.5 0 0 0-.5.5v7a.5.5 0 0 0 .294.456M12 10a2 2 0 0 1 1.732 1h.768a.5.5 0 0 0 .5-.5V8.35a.5.5 0 0 0-.11-.312l-1.48-1.85A.5.5 0 0 0 13.02 6H12zm-9 1a1 1 0 1 0 0 2 1 1 0 0 0 0-2m9 0a1 1 0 1 0 0 2 1 1 0 0 0 0-2"/>
+                            </svg>
+                        </div>
+                        <h5>Free Shipping</h5>
+                        <p class="text-muted">On orders over $50</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4 mb-4">
+                <div class="card border-0 bg-transparent">
+                    <div class="card-body">
+                        <div class="mb-3">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" fill="currentColor" class="bi bi-shield-check text-success" viewBox="0 0 16 16">
+                                <path d="M5.338 1.59a61 61 0 0 0-2.837.856.48.48 0 0 0-.328.39c-.554 4.157.726 7.19 2.253 9.188a10.7 10.7 0 0 0 2.287 2.233c.346.244.652.42.893.533q.18.085.293.118a1 1 0 0 0 .101.025 1 1 0 0 0 .1-.025q.114-.034.294-.118c.24-.113.547-.29.893-.533a10.7 10.7 0 0 0 2.287-2.233c1.527-1.997 2.807-5.031 2.253-9.188a.48.48 0 0 0-.328-.39c-.651-.213-1.75-.56-2.837-.855C9.552 1.29 8.531 1.067 8 1.067c-.53 0-1.552.223-2.662.524zM5.072.56C6.157.265 7.31 0 8 0s1.843.265 2.928.56c1.11.3 2.229.655 2.887.87a1.54 1.54 0 0 1 1.044 1.262c.596 4.477-.787 7.795-2.465 9.99a11.8 11.8 0 0 1-2.517 2.453 7 7 0 0 1-1.048.625c-.28.132-.581.24-.829.24s-.548-.108-.829-.24a7 7 0 0 1-1.048-.625 11.8 11.8 0 0 1-2.517-2.453C1.928 10.487.545 7.169 1.141 2.692A1.54 1.54 0 0 1 2.185 1.43 63 63 0 0 1 5.072.56"/>
+                                <path d="M10.854 5.146a.5.5 0 0 1 0 .708l-3 3a.5.5 0 0 1-.708 0l-1.5-1.5a.5.5 0 1 1 .708-.708L7.5 7.793l2.646-2.647a.5.5 0 0 1 .708 0"/>
+                            </svg>
+                        </div>
+                        <h5>Secure Payment</h5>
+                        <p class="text-muted">100% secure transactions</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4 mb-4">
+                <div class="card border-0 bg-transparent">
+                    <div class="card-body">
+                        <div class="mb-3">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" fill="currentColor" class="bi bi-arrow-clockwise text-warning" viewBox="0 0 16 16">
+                                <path fill-rule="evenodd" d="M8 3a5 5 0 1 0 4.546 2.914.5.5 0 0 1 .908-.417A6 6 0 1 1 8 2z"/>
+                                <path d="M8 4.466V.534a.25.25 0 0 1 .41-.192l2.36 1.966c.12.1.12.284 0 .384L8.41 4.658A.25.25 0 0 1 8 4.466"/>
+                            </svg>
+                        </div>
+                        <h5>Easy Returns</h5>
+                        <p class="text-muted">30-day return policy</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+===== FICHIER: C:\Users\dell\Desktop\4GI-EHEI\SYMFONY\ecommerce\templates\partials\index.html.twig =====
+<div class="bg-primary bg-gradient text-white py-5">
+    <div class="container">
+        <div class="row align-items-center">
+            <div class="col-lg-6">
+                <h1 class="display-3 fw-bold mb-4">Welcome to Our Store</h1>
+                <p class="lead mb-4">Discover amazing products across all categories. Quality items at unbeatable prices.</p>
+                <a href="index.html" class="btn btn-light btn-lg me-2">Shop Now</a>
+                <a href="#categories" class="btn btn-outline-light btn-lg">Browse Categories</a>
+            </div>
+            <div class="col-lg-6 text-center">
+                <img src="https://via.placeholder.com/500x400" class="img-fluid rounded" alt="Shopping">
+            </div>
+        </div>
+    </div>
+</div>
+
+
+===== FICHIER: C:\Users\dell\Desktop\4GI-EHEI\SYMFONY\ecommerce\templates\product\indew.html .twig =====
+{% extends 'layout.html.twig' %}
+{% block title %} product name {% endblock title %}
+{% block content %}
+
+    <!-- Products Section -->
+    <div class="container my-5">
+        <h1 class="mb-4">Our Products</h1>
+
+        <div class="row row-cols-1 row-cols-md-3 g-4">
+            <!-- Product 1 -->
+            <div class="col">
+                <div class="card h-100">
+                    <img src="item.png" class="card-img-top" alt="Product 1">
+                    <div class="card-body">
+                        <span class="badge bg-primary mb-2">Electronics</span>
+                        <h5 class="card-title">Wireless Headphones</h5>
+                        <p class="card-text fw-bold text-success">$79.99</p>
+                        <a href="details.html?id=1" class="btn btn-outline-primary">View Details</a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Product 2 -->
+            <div class="col">
+                <div class="card h-100">
+                    <img src="item.png" class="card-img-top" alt="Product 2">
+                    <div class="card-body">
+                        <span class="badge bg-warning mb-2">Fashion</span>
+                        <h5 class="card-title">Classic Leather Jacket</h5>
+                        <p class="card-text fw-bold text-success">$149.99</p>
+                        <a href="details.html?id=2" class="btn btn-outline-primary">View Details</a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Product 3 -->
+            <div class="col">
+                <div class="card h-100">
+                    <img src="item.png" class="card-img-top" alt="Product 3">
+                    <div class="card-body">
+                        <span class="badge bg-success mb-2">Home & Garden</span>
+                        <h5 class="card-title">Smart Plant Sensor</h5>
+                        <p class="card-text fw-bold text-success">$34.99</p>
+                        <a href="details.html?id=3" class="btn btn-outline-primary">View Details</a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Product 4 -->
+            <div class="col">
+                <div class="card h-100">
+                    <img src="item.png" class="card-img-top" alt="Product 4">
+                    <div class="card-body">
+                        <span class="badge bg-info mb-2">Sports</span>
+                        <h5 class="card-title">Yoga Mat Premium</h5>
+                        <p class="card-text fw-bold text-success">$29.99</p>
+                        <a href="details.html?id=4" class="btn btn-outline-primary">View Details</a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Product 5 -->
+            <div class="col">
+                <div class="card h-100">
+                    <img src="item.png" class="card-img-top" alt="Product 5">
+                    <div class="card-body">
+                        <span class="badge bg-primary mb-2">Electronics</span>
+                        <h5 class="card-title">Bluetooth Speaker</h5>
+                        <p class="card-text fw-bold text-success">$59.99</p>
+                        <a href="details.html?id=5" class="btn btn-outline-primary">View Details</a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Product 6 -->
+            <div class="col">
+                <div class="card h-100">
+                    <img src="item.png" class="card-img-top" alt="Product 6">
+                    <div class="card-body">
+                        <span class="badge bg-danger mb-2">Books</span>
+                        <h5 class="card-title">Web Development Guide</h5>
+                        <p class="card-text fw-bold text-success">$24.99</p>
+                        <a href="details.html?id=6" class="btn btn-outline-primary">View Details</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+{% endblock content %}
+
+
+===== FICHIER: C:\Users\dell\Desktop\4GI-EHEI\SYMFONY\ecommerce\templates\product\products_by_category.html .twig =====
+{% extends 'layout.html.twig' %}
+{% block title %} category {% endblock title %}
+{% block content %}
+
+    <!-- Breadcrumb -->
+    <div class="container mt-4">
+        <nav aria-label="breadcrumb">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a href="index.html" class="text-decoration-none">Home</a></li>
+                <li class="breadcrumb-item"><a href="#" class="text-decoration-none">Categories</a></li>
+                <li class="breadcrumb-item active" aria-current="page">Electronics</li>
+            </ol>
+        </nav>
+    </div>
+
+    <!-- Jumbotron -->
+    <div class="container my-4">
+        <div class="p-5 mb-4 bg-primary bg-gradient text-white rounded-3">
+            <div class="container-fluid py-3">
+                <h1 class="display-4 fw-bold">Electronics</h1>
+                <p class="col-md-8 fs-5">Discover the latest in technology and electronics. From headphones to speakers, find everything you need to stay connected and entertained.</p>
+                <span class="badge bg-light text-dark fs-6">12 Products Available</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Products by Category -->
+    <div class="container mb-5">
+        <div class="row mb-4">
+            <div class="col">
+                <div class="d-flex justify-content-between align-items-center">
+                    <h3>Browse Electronics</h3>
+                    <div class="btn-group" role="group">
+                        <button type="button" class="btn btn-outline-secondary active">Grid</button>
+                        <button type="button" class="btn btn-outline-secondary">List</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row row-cols-1 row-cols-md-3 g-4">
+            <!-- Product 1 -->
+            <div class="col">
+                <div class="card h-100">
+                    <img src="mouse.png" class="card-img-top" alt="Wireless Headphones">
+                    <div class="card-body">
+                        <span class="badge bg-primary mb-2">Electronics</span>
+                        <h5 class="card-title">Wireless Headphones</h5>
+                        <p class="card-text fw-bold text-success">$79.99</p>
+                        <a href="details.html?id=1" class="btn btn-outline-primary">View Details</a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Product 2 -->
+            <div class="col">
+                <div class="card h-100">
+                    <img src="mouse.png" class="card-img-top" alt="Bluetooth Speaker">
+                    <div class="card-body">
+                        <span class="badge bg-primary mb-2">Electronics</span>
+                        <h5 class="card-title">Bluetooth Speaker</h5>
+                        <p class="card-text fw-bold text-success">$59.99</p>
+                        <a href="details.html?id=5" class="btn btn-outline-primary">View Details</a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Product 3 -->
+            <div class="col">
+                <div class="card h-100">
+                    <img src="mouse.png" class="card-img-top" alt="Smartphone Stand">
+                    <div class="card-body">
+                        <span class="badge bg-primary mb-2">Electronics</span>
+                        <h5 class="card-title">Smartphone Stand</h5>
+                        <p class="card-text fw-bold text-success">$19.99</p>
+                        <a href="details.html?id=7" class="btn btn-outline-primary">View Details</a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Product 4 -->
+            <div class="col">
+                <div class="card h-100">
+                    <img src="mouse.png" class="card-img-top" alt="USB-C Cable">
+                    <div class="card-body">
+                        <span class="badge bg-primary mb-2">Electronics</span>
+                        <h5 class="card-title">USB-C Cable 2m</h5>
+                        <p class="card-text fw-bold text-success">$12.99</p>
+                        <a href="details.html?id=8" class="btn btn-outline-primary">View Details</a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Product 5 -->
+            <div class="col">
+                <div class="card h-100">
+                    <img src="mouse.png" class="card-img-top" alt="Wireless Mouse">
+                    <div class="card-body">
+                        <span class="badge bg-primary mb-2">Electronics</span>
+                        <h5 class="card-title">Wireless Mouse</h5>
+                        <p class="card-text fw-bold text-success">$29.99</p>
+                        <a href="details.html?id=9" class="btn btn-outline-primary">View Details</a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Product 6 -->
+            <div class="col">
+                <div class="card h-100">
+                    <img src="mouse.png" class="card-img-top" alt="Mechanical Keyboard">
+                    <div class="card-body">
+                        <span class="badge bg-primary mb-2">Electronics</span>
+                        <h5 class="card-title">Mechanical Keyboard</h5>
+                        <p class="card-text fw-bold text-success">$89.99</p>
+                        <a href="details.html?id=10" class="btn btn-outline-primary">View Details</a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Product 7 -->
+            <div class="col">
+                <div class="card h-100">
+                    <img src="mouse.png" class="card-img-top" alt="Webcam HD">
+                    <div class="card-body">
+                        <span class="badge bg-primary mb-2">Electronics</span>
+                        <h5 class="card-title">Webcam HD 1080p</h5>
+                        <p class="card-text fw-bold text-success">$49.99</p>
+                        <a href="details.html?id=11" class="btn btn-outline-primary">View Details</a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Product 8 -->
+            <div class="col">
+                <div class="card h-100">
+                    <img src="mouse.png" class="card-img-top" alt="Power Bank">
+                    <div class="card-body">
+                        <span class="badge bg-primary mb-2">Electronics</span>
+                        <h5 class="card-title">Power Bank 20000mAh</h5>
+                        <p class="card-text fw-bold text-success">$39.99</p>
+                        <a href="details.html?id=12" class="btn btn-outline-primary">View Details</a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Product 9 -->
+            <div class="col">
+                <div class="card h-100">
+                    <img src="mouse.png" class="card-img-top" alt="Smart Watch">
+                    <div class="card-body">
+                        <span class="badge bg-primary mb-2">Electronics</span>
+                        <h5 class="card-title">Smart Watch Pro</h5>
+                        <p class="card-text fw-bold text-success">$199.99</p>
+                        <a href="details.html?id=13" class="btn btn-outline-primary">View Details</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Pagination -->
+        <nav aria-label="Product pagination" class="mt-5">
+            <ul class="pagination justify-content-center">
+                <li class="page-item disabled">
+                    <a class="page-link" href="#" tabindex="-1">Previous</a>
+                </li>
+                <li class="page-item active"><a class="page-link" href="#">1</a></li>
+                <li class="page-item"><a class="page-link" href="#">2</a></li>
+                <li class="page-item"><a class="page-link" href="#">3</a></li>
+                <li class="page-item">
+                    <a class="page-link" href="#">Next</a>
+                </li>
+            </ul>
+        </nav>
+    </div>
+
+{% endblock content %}
+
+
+===== FICHIER: C:\Users\dell\Desktop\4GI-EHEI\SYMFONY\ecommerce\templates\product\product_details.html .twig =====
+{% extends 'layout.html.twig' %}
+{% block title %} product name {% endblock title %}
+{% block content %}
+
+    <!-- Product Details Section -->
+    <div class="container my-5">
+        <div class="row">
+            <!-- Product Image -->
+            <div class="col-md-6">
+                <img src="airbod.png" class="img-fluid rounded" alt="Product">
+            </div>
+
+            <!-- Product Information -->
+            <div class="col-md-6">
+                <nav aria-label="breadcrumb">
+                    <ol class="breadcrumb">
+                        <li class="breadcrumb-item"><a href="index.html" class="text-decoration-none">Home</a></li>
+                        <li class="breadcrumb-item active" aria-current="page">Product Details</li>
+                    </ol>
+                </nav>
+
+                <span class="badge bg-primary mb-3">Electronics</span>
+
+                <h1 class="mb-3">Wireless Headphones</h1>
+
+                <h3 class="text-success mb-4">$79.99</h3>
+
+                <div class="mb-4">
+                    <h5>Description</h5>
+                    <p class="text-muted">
+                        Experience premium sound quality with our wireless headphones.
+                        Featuring advanced noise cancellation technology, comfortable over-ear design,
+                        and up to 30 hours of battery life. Perfect for music lovers, travelers, and professionals.
+                        The foldable design makes them easy to carry, while the premium materials ensure durability
+                        and long-lasting comfort.
+                    </p>
+                </div>
+
+                <!-- Add to Cart Form -->
+                <form>
+                    <div class="mb-3">
+                        <label for="quantity" class="form-label">Quantity</label>
+                        <input type="number" class="form-control" id="quantity" name="quantity" value="1" min="1" max="10" style="max-width: 100px;">
+                    </div>
+
+                    <div class="d-grid gap-2 d-md-flex">
+                        <button type="submit" class="btn btn-primary btn-lg">Add to Cart</button>
+                        <a href="index.html" class="btn btn-outline-secondary btn-lg">Continue Shopping</a>
+                    </div>
+                </form>
+
+                <!-- Additional Info -->
+                <div class="mt-4 pt-4 border-top">
+                    <ul class="list-unstyled">
+                        <li class="mb-2"><strong>SKU:</strong> WH-2024-001</li>
+                        <li class="mb-2"><strong>Availability:</strong> <span class="text-success">In Stock</span></li>
+                        <li class="mb-2"><strong>Category:</strong> Electronics</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+{% endblock content %}
+
+
+===== FICHIER: C:\Users\dell\Desktop\4GI-EHEI\SYMFONY\ecommerce\templates\profile\profile.html.twig =====
+{% extends 'layout.html.twig' %}
+{% block title %} My profile - Our Store {% endblock title %}
+{% block content %}
+
+    <!-- Profile Section -->
+    <div class="container my-5">
+        <div class="row">
+            <!-- Sidebar -->
+            <div class="col-md-3">
+                <div class="card">
+                    <div class="card-body text-center">
+                        <img src="profile.png" class="rounded-circle mb-3" alt="User Avatar" width="150" height="150">
+                        <h5 class="card-title">John Doe</h5>
+                        <p class="text-muted">john.doe@email.com</p>
+                        <hr>
+                        <ul class="list-unstyled">
+                            <li class="mb-2"><a href="#profile" class="text-decoration-none">Profile Information</a></li>
+                            <li class="mb-2"><a href="#orders" class="text-decoration-none">My Orders</a></li>
+                            <li class="mb-2"><a href="#" class="text-decoration-none">Settings</a></li>
+                            <li class="mb-2"><a href="login.html" class="text-decoration-none text-danger">Logout</a></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Main Content -->
+            <div class="col-md-9">
+                <!-- Profile Information -->
+                <div class="card mb-4" id="profile">
+                    <div class="card-header bg-primary text-white">
+                        <h5 class="mb-0">Profile Information</h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="row mb-3">
+                            <div class="col-md-6">
+                                <label class="fw-bold">Full Name:</label>
+                                <p>John Doe</p>
+                            </div>
+                            <div class="col-md-6">
+                                <label class="fw-bold">Email:</label>
+                                <p>john.doe@email.com</p>
+                            </div>
+                        </div>
+                        <div class="row mb-3">
+                            <div class="col-md-6">
+                                <label class="fw-bold">Phone:</label>
+                                <p>+1 (555) 123-4567</p>
+                            </div>
+                            <div class="col-md-6">
+                                <label class="fw-bold">Member Since:</label>
+                                <p>January 15, 2024</p>
+                            </div>
+                        </div>
+                        <div class="row mb-3">
+                            <div class="col-12">
+                                <label class="fw-bold">Shipping Address:</label>
+                                <p>123 Main Street, Apt 4B<br>New York, NY 10001<br>United States</p>
+                            </div>
+                        </div>
+                        <button class="btn btn-outline-primary">Edit Profile</button>
+                    </div>
+                </div>
+
+                <!-- Order History -->
+                <div class="card" id="orders">
+                    <div class="card-header bg-primary text-white">
+                        <h5 class="mb-0">Order History</h5>
+                    </div>
+                    <div class="card-body">
+                        <!-- Order 1 -->
+                        <div class="card mb-3">
+                            <div class="card-body">
+                                <div class="row">
+                                    <div class="col-md-8">
+                                        <h6 class="card-title">Order #ORD-2024-001</h6>
+                                        <p class="text-muted mb-2">Placed on: February 10, 2024</p>
+                                        <p class="mb-1"><strong>Items:</strong> Wireless Headphones, Bluetooth Speaker</p>
+                                        <p class="mb-0"><strong>Total:</strong> $139.98</p>
+                                    </div>
+                                    <div class="col-md-4 text-md-end">
+                                        <span class="badge bg-success mb-2">Delivered</span>
+                                        <br>
+                                        <a href="#" class="btn btn-sm btn-outline-primary mt-2">View Details</a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Order 2 -->
+                        <div class="card mb-3">
+                            <div class="card-body">
+                                <div class="row">
+                                    <div class="col-md-8">
+                                        <h6 class="card-title">Order #ORD-2024-002</h6>
+                                        <p class="text-muted mb-2">Placed on: February 5, 2024</p>
+                                        <p class="mb-1"><strong>Items:</strong> Classic Leather Jacket</p>
+                                        <p class="mb-0"><strong>Total:</strong> $149.99</p>
+                                    </div>
+                                    <div class="col-md-4 text-md-end">
+                                        <span class="badge bg-info mb-2">In Transit</span>
+                                        <br>
+                                        <a href="#" class="btn btn-sm btn-outline-primary mt-2">Track Order</a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Order 3 -->
+                        <div class="card mb-3">
+                            <div class="card-body">
+                                <div class="row">
+                                    <div class="col-md-8">
+                                        <h6 class="card-title">Order #ORD-2024-003</h6>
+                                        <p class="text-muted mb-2">Placed on: January 28, 2024</p>
+                                        <p class="mb-1"><strong>Items:</strong> Yoga Mat, Smart Plant Sensor</p>
+                                        <p class="mb-0"><strong>Total:</strong> $64.98</p>
+                                    </div>
+                                    <div class="col-md-4 text-md-end">
+                                        <span class="badge bg-warning mb-2">Processing</span>
+                                        <br>
+                                        <a href="#" class="btn btn-sm btn-outline-primary mt-2">View Details</a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Order 4 -->
+                        <div class="card mb-3">
+                            <div class="card-body">
+                                <div class="row">
+                                    <div class="col-md-8">
+                                        <h6 class="card-title">Order #ORD-2024-004</h6>
+                                        <p class="text-muted mb-2">Placed on: January 20, 2024</p>
+                                        <p class="mb-1"><strong>Items:</strong> Web Development Guide</p>
+                                        <p class="mb-0"><strong>Total:</strong> $24.99</p>
+                                    </div>
+                                    <div class="col-md-4 text-md-end">
+                                        <span class="badge bg-danger mb-2">Cancelled</span>
+                                        <br>
+                                        <a href="#" class="btn btn-sm btn-outline-secondary mt-2">View Details</a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Order 5 -->
+                        <div class="card mb-3">
+                            <div class="card-body">
+                                <div class="row">
+                                    <div class="col-md-8">
+                                        <h6 class="card-title">Order #ORD-2024-005</h6>
+                                        <p class="text-muted mb-2">Placed on: January 15, 2024</p>
+                                        <p class="mb-1"><strong>Items:</strong> Mechanical Keyboard, Wireless Mouse</p>
+                                        <p class="mb-0"><strong>Total:</strong> $119.98</p>
+                                    </div>
+                                    <div class="col-md-4 text-md-end">
+                                        <span class="badge bg-success mb-2">Delivered</span>
+                                        <br>
+                                        <a href="#" class="btn btn-sm btn-outline-primary mt-2">Buy Again</a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Pagination -->
+                        <nav aria-label="Order pagination">
+                            <ul class="pagination justify-content-center mb-0">
+                                <li class="page-item disabled">
+                                    <a class="page-link" href="#" tabindex="-1">Previous</a>
+                                </li>
+                                <li class="page-item active"><a class="page-link" href="#">1</a></li>
+                                <li class="page-item"><a class="page-link" href="#">2</a></li>
+                                <li class="page-item">
+                                    <a class="page-link" href="#">Next</a>
+                                </li>
+                            </ul>
+                        </nav>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+{% endblock content %}
+
+
+===== FICHIER: C:\Users\dell\Desktop\4GI-EHEI\SYMFONY\ecommerce\templates\security\login.html.twig =====
+{% extends 'layout.html.twig' %}
+{% block title %} Login - Our Store {% endblock title %}
+{% block content %}
+
+    <!-- Login Section -->
+    <div class="container my-5">
+        <div class="row justify-content-center">
+            <div class="col-md-10">
+                <div class="card shadow">
+                    <div class="row g-0">
+                        <!-- Left Side - Login Form -->
+                        <div class="col-md-6">
+                            <div class="card-body p-5">
+                                <h2 class="card-title mb-4">Login to Your Account</h2>
+                                <form>
+                                    <div class="mb-3">
+                                        <label for="email" class="form-label">Email address</label>
+                                        <input type="email" class="form-control" id="email" placeholder="Enter your email" required>
+                                    </div>
+                                    <div class="mb-3">
+                                        <label for="password" class="form-label">Password</label>
+                                        <input type="password" class="form-control" id="password" placeholder="Enter your password" required>
+                                    </div>
+                                    <div class="mb-3 form-check">
+                                        <input type="checkbox" class="form-check-input" id="rememberMe">
+                                        <label class="form-check-label" for="rememberMe">
+                                            Remember me
+                                        </label>
+                                    </div>
+                                    <div class="d-grid">
+                                        <button type="submit" class="btn btn-primary btn-lg">Login</button>
+                                    </div>
+                                </form>
+                                <div class="mt-3 text-center">
+                                    <a href="#" class="text-decoration-none">Forgot Password?</a>
+                                </div>
+                                <hr class="my-4">
+                                <p class="text-center text-muted">Don't have an account? <a href="#register" class="text-decoration-none">Sign up</a></p>
+                            </div>
+                        </div>
+
+                        <!-- Right Side - Register Form -->
+                        <div class="col-md-6 bg-light">
+                            <div class="card-body p-5">
+                                <h2 class="card-title mb-4">Create an Account</h2>
+                                <form id="register">
+                                    <div class="mb-3">
+                                        <label for="fullName" class="form-label">Full Name</label>
+                                        <input type="text" class="form-control" id="fullName" placeholder="Enter your full name" required>
+                                    </div>
+                                    <div class="mb-3">
+                                        <label for="registerEmail" class="form-label">Email address</label>
+                                        <input type="email" class="form-control" id="registerEmail" placeholder="Enter your email" required>
+                                    </div>
+                                    <div class="mb-3">
+                                        <label for="registerPassword" class="form-label">Password</label>
+                                        <input type="password" class="form-control" id="registerPassword" placeholder="Create a password" required>
+                                    </div>
+                                    <div class="mb-3">
+                                        <label for="confirmPassword" class="form-label">Confirm Password</label>
+                                        <input type="password" class="form-control" id="confirmPassword" placeholder="Confirm your password" required>
+                                    </div>
+                                    <div class="mb-3 form-check">
+                                        <input type="checkbox" class="form-check-input" id="terms" required>
+                                        <label class="form-check-label" for="terms">
+                                            I agree to the <a href="#" class="text-decoration-none">Terms & Conditions</a>
+                                        </label>
+                                    </div>
+                                    <div class="d-grid">
+                                        <button type="submit" class="btn btn-success btn-lg">Sign Up</button>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Social Login -->
+                <div class="card mt-4">
+                    <div class="card-body">
+                        <p class="text-center text-muted mb-3">Or continue with</p>
+                        <div class="row g-2">
+                            <div class="col-md-4">
+                                <button class="btn btn-outline-dark w-100">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-google me-2" viewBox="0 0 16 16">
+                                        <path d="M15.545 6.558a9.4 9.4 0 0 1 .139 1.626c0 2.434-.87 4.492-2.384 5.885h.002C11.978 15.292 10.158 16 8 16A8 8 0 1 1 8 0a7.7 7.7 0 0 1 5.352 2.082l-2.284 2.284A4.35 4.35 0 0 0 8 3.166c-2.087 0-3.86 1.408-4.492 3.304a4.8 4.8 0 0 0 0 3.063h.003c.635 1.893 2.405 3.301 4.492 3.301 1.078 0 2.004-.276 2.722-.764h-.003a3.7 3.7 0 0 0 1.599-2.431H8v-3.08z"/>
+                                    </svg>
+                                    Google
+                                </button>
+                            </div>
+                            <div class="col-md-4">
+                                <button class="btn btn-outline-primary w-100">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-facebook me-2" viewBox="0 0 16 16">
+                                        <path d="M16 8.049c0-4.446-3.582-8.05-8-8.05C3.58 0-.002 3.603-.002 8.05c0 4.017 2.926 7.347 6.75 7.951v-5.625h-2.03V8.05H6.75V6.275c0-2.017 1.195-3.131 3.022-3.131.876 0 1.791.157 1.791.157v1.98h-1.009c-.993 0-1.303.621-1.303 1.258v1.51h2.218l-.354 2.326H9.25V16c3.824-.604 6.75-3.934 6.75-7.951"/>
+                                    </svg>
+                                    Facebook
+                                </button>
+                            </div>
+                            <div class="col-md-4">
+                                <button class="btn btn-outline-secondary w-100">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-apple me-2" viewBox="0 0 16 16">
+                                        <path d="M11.182.008C11.148-.03 9.923.023 8.857 1.18c-1.066 1.156-.902 2.482-.878 2.516s1.52.087 2.475-1.258.762-2.391.728-2.43m3.314 11.733c-.048-.096-2.325-1.234-2.113-3.422s1.675-2.789 1.698-2.854-.597-.79-1.254-1.157a3.7 3.7 0 0 0-1.563-.434c-.108-.003-.483-.095-1.254.116-.508.139-1.653.589-1.968.607-.316.018-1.256-.522-2.267-.665-.647-.125-1.333.131-1.824.328-.49.196-1.422.754-2.074 2.237-.652 1.482-.311 3.83-.067 4.56s.625 1.924 1.273 2.796c.576.984 1.34 1.667 1.659 1.899s1.219.386 1.843.067c.502-.308 1.408-.485 1.766-.472.357.013 1.061.154 1.782.539.571.197 1.111.115 1.652-.105.541-.221 1.324-1.059 2.238-2.758q.52-1.185.473-1.282"/>
+                                    </svg>
+                                    Apple
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+{% endblock content %}
+
+
+===== FICHIER: C:\Users\dell\Desktop\4GI-EHEI\SYMFONY\ecommerce\templates\base.html.twig =====
+{% extends 'base.html.twig' %}
+{% block body %}
+    <!-- Header -->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+        <div class="container">
+            <a class="navbar-brand" href="home.html">Our Store</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item">
+                        <a class="nav-link active" href="home.html">Home</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="index.html">Products</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="cart.html">Cart</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="profile.html">Profile</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    {% block content %}{% endblock content %}
+
+    <!-- Footer -->
+    <footer class="bg-dark text-white mt-5 py-4">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-6">
+                    <h5>Our Store</h5>
+                    <p>Quality products at affordable prices</p>
+                </div>
+                <div class="col-md-6 text-md-end">
+                    <p>&copy; 2026 Our Store. All rights reserved.</p>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+{% endblock body %}
+
+
+===== FICHIER: C:\Users\dell\Desktop\4GI-EHEI\SYMFONY\ecommerce\tests\bootstrap.php =====
+<?php
+
+use Symfony\Component\Dotenv\Dotenv;
+
+require dirname(__DIR__).'/vendor/autoload.php';
+
+if (method_exists(Dotenv::class, 'bootEnv')) {
+    (new Dotenv())->bootEnv(dirname(__DIR__).'/.env');
+}
+
+if ($_SERVER['APP_DEBUG']) {
+    umask(0000);
+}
+
+
+
+===== FICHIER: C:\Users\dell\Desktop\4GI-EHEI\SYMFONY\ecommerce\compose.override.yaml =====
+
+services:
+###> doctrine/doctrine-bundle ###
+  database:
+    ports:
+      - "5432"
+###< doctrine/doctrine-bundle ###
+
+###> symfony/mailer ###
+  mailer:
+    image: axllent/mailpit
+    ports:
+      - "1025"
+      - "8025"
+    environment:
+      MP_SMTP_AUTH_ACCEPT_ANY: 1
+      MP_SMTP_AUTH_ALLOW_INSECURE: 1
+###< symfony/mailer ###
+
+
+
+===== FICHIER: C:\Users\dell\Desktop\4GI-EHEI\SYMFONY\ecommerce\compose.yaml =====
+
+services:
+###> doctrine/doctrine-bundle ###
+  database:
+    image: postgres:${POSTGRES_VERSION:-16}-alpine
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB:-app}
+      # You should definitely change the password in production
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-!ChangeMe!}
+      POSTGRES_USER: ${POSTGRES_USER:-app}
+    healthcheck:
+      test: ["CMD", "pg_isready", "-d", "${POSTGRES_DB:-app}", "-U", "${POSTGRES_USER:-app}"]
+      timeout: 5s
+      retries: 5
+      start_period: 60s
+    volumes:
+      - database_data:/var/lib/postgresql/data:rw
+      # You may use a bind-mounted host directory instead, so that it is harder to accidentally remove the volume and lose all your data!
+      # - ./docker/db/data:/var/lib/postgresql/data:rw
+###< doctrine/doctrine-bundle ###
+
+volumes:
+###> doctrine/doctrine-bundle ###
+  database_data:
+###< doctrine/doctrine-bundle ###
+
+
+
+===== FICHIER: C:\Users\dell\Desktop\4GI-EHEI\SYMFONY\ecommerce\composer.json =====
+{
+    "type": "project",
+    "license": "proprietary",
+    "minimum-stability": "stable",
+    "prefer-stable": true,
+    "require": {
+        "php": ">=8.2",
+        "ext-ctype": "*",
+        "ext-iconv": "*",
+        "doctrine/doctrine-bundle": "^2.18",
+        "doctrine/doctrine-migrations-bundle": "^3.7",
+        "doctrine/orm": "^3.6",
+        "phpdocumentor/reflection-docblock": "^6.0",
+        "phpstan/phpdoc-parser": "^2.3",
+        "symfony/asset": "7.1.*",
+        "symfony/asset-mapper": "7.1.*",
+        "symfony/console": "7.1.*",
+        "symfony/doctrine-messenger": "7.1.*",
+        "symfony/dotenv": "7.1.*",
+        "symfony/expression-language": "7.1.*",
+        "symfony/flex": "^2",
+        "symfony/form": "7.1.*",
+        "symfony/framework-bundle": "7.1.*",
+        "symfony/http-client": "7.1.*",
+        "symfony/intl": "7.1.*",
+        "symfony/mailer": "7.1.*",
+        "symfony/mime": "7.1.*",
+        "symfony/monolog-bundle": "^3.0|^4.0",
+        "symfony/notifier": "7.1.*",
+        "symfony/process": "7.1.*",
+        "symfony/property-access": "7.1.*",
+        "symfony/property-info": "7.1.*",
+        "symfony/runtime": "7.1.*",
+        "symfony/security-bundle": "7.1.*",
+        "symfony/serializer": "7.1.*",
+        "symfony/stimulus-bundle": "^2.34",
+        "symfony/string": "7.1.*",
+        "symfony/translation": "7.1.*",
+        "symfony/twig-bundle": "7.1.*",
+        "symfony/ux-turbo": "^2.34",
+        "symfony/validator": "7.1.*",
+        "symfony/web-link": "7.1.*",
+        "symfony/yaml": "7.1.*",
+        "twig/extra-bundle": "^2.12|^3.0",
+        "twig/twig": "^2.12|^3.0"
+    },
+    "config": {
+        "allow-plugins": {
+            "php-http/discovery": true,
+            "symfony/flex": true,
+            "symfony/runtime": true
+        },
+        "sort-packages": true
+    },
+    "autoload": {
+        "psr-4": {
+            "App\\": "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "App\\Tests\\": "tests/"
+        }
+    },
+    "replace": {
+        "symfony/polyfill-ctype": "*",
+        "symfony/polyfill-iconv": "*",
+        "symfony/polyfill-php72": "*",
+        "symfony/polyfill-php73": "*",
+        "symfony/polyfill-php74": "*",
+        "symfony/polyfill-php80": "*",
+        "symfony/polyfill-php81": "*",
+        "symfony/polyfill-php82": "*"
+    },
+    "scripts": {
+        "auto-scripts": {
+            "cache:clear": "symfony-cmd",
+            "assets:install %PUBLIC_DIR%": "symfony-cmd",
+            "importmap:install": "symfony-cmd"
+        },
+        "post-install-cmd": [
+            "@auto-scripts"
+        ],
+        "post-update-cmd": [
+            "@auto-scripts"
+        ]
+    },
+    "conflict": {
+        "symfony/symfony": "*"
+    },
+    "extra": {
+        "symfony": {
+            "allow-contrib": false,
+            "require": "7.1.*"
+        }
+    },
+    "require-dev": {
+        "phpunit/phpunit": "^11.5",
+        "symfony/browser-kit": "7.1.*",
+        "symfony/css-selector": "7.1.*",
+        "symfony/debug-bundle": "7.1.*",
+        "symfony/maker-bundle": "^1.0",
+        "symfony/stopwatch": "7.1.*",
+        "symfony/web-profiler-bundle": "7.1.*"
+    }
+}
+
+
+
+===== FICHIER: C:\Users\dell\Desktop\4GI-EHEI\SYMFONY\ecommerce\importmap.php =====
+<?php
+
+/**
+ * Returns the importmap for this application.
+ *
+ * - "path" is a path inside the asset mapper system. Use the
+ *     "debug:asset-map" command to see the full list of paths.
+ *
+ * - "entrypoint" (JavaScript only) set to true for any module that will
+ *     be used as an "entrypoint" (and passed to the importmap() Twig function).
+ *
+ * The "importmap:require" command can be used to add new entries to this file.
+ */
+return [
+    'app' => [
+        'path' => './assets/app.js',
+        'entrypoint' => true,
+    ],
+    '@hotwired/stimulus' => [
+        'version' => '3.2.2',
+    ],
+    '@symfony/stimulus-bundle' => [
+        'path' => './vendor/symfony/stimulus-bundle/assets/dist/loader.js',
+    ],
+    '@hotwired/turbo' => [
+        'version' => '7.3.0',
+    ],
+];
+
+
+
+===== FICHIER: C:\Users\dell\Desktop\4GI-EHEI\SYMFONY\ecommerce\phpunit.dist.xml =====
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!-- https://phpunit.readthedocs.io/en/latest/configuration.html -->
+<phpunit xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:noNamespaceSchemaLocation="vendor/phpunit/phpunit/phpunit.xsd"
+         colors="true"
+         failOnDeprecation="true"
+         failOnNotice="true"
+         failOnWarning="true"
+         bootstrap="tests/bootstrap.php"
+         cacheDirectory=".phpunit.cache"
+>
+    <php>
+        <ini name="display_errors" value="1" />
+        <ini name="error_reporting" value="-1" />
+        <server name="APP_ENV" value="test" force="true" />
+        <server name="SHELL_VERBOSITY" value="-1" />
+    </php>
+
+    <testsuites>
+        <testsuite name="Project Test Suite">
+            <directory>tests</directory>
+        </testsuite>
+    </testsuites>
+
+    <source ignoreSuppressionOfDeprecations="true"
+            ignoreIndirectDeprecations="true"
+            restrictNotices="true"
+            restrictWarnings="true"
+    >
+        <include>
+            <directory>src</directory>
+        </include>
+
+        <deprecationTrigger>
+            <method>Doctrine\Deprecations\Deprecation::trigger</method>
+            <method>Doctrine\Deprecations\Deprecation::delegateTriggerToBackend</method>
+            <function>trigger_deprecation</function>
+        </deprecationTrigger>
+    </source>
+
+    <extensions>
+    </extensions>
+</phpunit>
+
