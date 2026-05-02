@@ -15,7 +15,10 @@
                             <span class="badge bg-primary mb-2">{{ product.category.nom }}</span>
                             <h5 class="card-title">{{ product.nom }}</h5>
                             <p class="fw-bold text-success">${{ product.prix|number_format(2) }}</p>
-                            <a href="{{ path('app_product_details', {id: product.id}) }}" class="btn btn-outline-primary">View Details</a>
+                            <div class="d-flex gap-2">
+                                <a href="{{ path('app_product_details', {id: product.id}) }}" class="btn btn-outline-primary">View Details</a>
+                                <a href="{{ path('app_cart_add', {id: product.id}) }}" class="btn btn-primary">Add to Cart</a>
+                            </div>
                         </div>
                     </div>
                 </div>
